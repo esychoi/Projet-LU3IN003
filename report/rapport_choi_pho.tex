@@ -1,12 +1,34 @@
 \documentclass[12pt]{article}
 \usepackage[utf8]{inputenc}
+\usepackage{color}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amsthm}
 \usepackage{bm}
 \usepackage{amssymb}
 \usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage{algorithmic}
 \usepackage{fullpage}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+
+\renewcommand{\contentsname}{Sommaire}
+\floatname{algorithm}{Algorithme}
+
+\renewcommand{\algorithmicrequire}{\textbf{Entrée :}}
+\renewcommand{\algorithmicensure}{\textbf{Sortie :}}
+\renewcommand{\algorithmicif}{\textbf{Si}}
+\renewcommand{\algorithmicelsif}{\textbf{Sinon si}}
+\renewcommand{\algorithmicelse}{\textbf{Sinon}}
+\renewcommand{\algorithmicthen}{\textbf{alors}}
+\renewcommand{\algorithmicendif}{\textbf{Fin Si}}
+\renewcommand{\algorithmicwhile}{\textbf{Tant que}}
+\renewcommand{\algorithmicendwhile}{\textbf{Fin Tant que}}
+\renewcommand{\algorithmicdo}{\textbf{faire}}
+\renewcommand{\algorithmicfor}{\textbf{Pour}}
+\renewcommand{\algorithmicendfor}{\textbf{Fin pour}}
+\renewcommand{\algorithmicreturn}{\textbf{Retourner}}
 
 \newcommand{\true}{\text{vrai}}
 \newcommand{\false}{\text{faux}}
@@ -18,6 +40,7 @@
 
 \begin{document}
 	\maketitle
+	\tableofcontents
 	\newpage
 	
 	\section{Méthode incomplète de résolution}
@@ -26,5 +49,86 @@
 		
 			\paragraph{Q1}
 				Il suffit de regarder s'il existe $ j \in \{1,...,M-1\} $ tel que $ T(j,k) = \true $. En effet cela signifierait qu'il existe un coloriage possible des $ j+1 $ premières cases avec la séquence complète $ (s_1,...,s_k) $.
+			
+			\paragraph{Q2}
+				Commençons par remarquer que $ \forall j \in \{0,...,M-1\} $ et $ \forall l \in \{1,...,k\} $, pour que $ T(j,l) $ soit vrai, il faut que les $ j+1 $ premières cases contiennent au moins les $ l $ premiers blocs noirs en entier en plus des $ l-1 $ cases blanches pour séparer chaque bloc noir, c'est-à-dire qu'il faut : \\
+				$ j+1 \geq l-1 + \sum\limits_{i=1}^{l} s_i = l-1 + s_l + \sum\limits_{i=1}^{l-1} s_i \implies \boxed{j \geq l-1 + s_l-1 + \sum\limits_{i=1}^{l-1} s_i} $
+				\begin{itemize}
+					\item cas de base 1 : si $ l = 0 $, cela signifie qu'il n'y a pas de blocs à placer. Donc il existe un coloriage possible pour les $ j+ $ premières cases : il suffit qu'elles soient toutes blanches.
+					\item cas de base 2a : supposons $ j < s_l-1 $
+						\begin{itemize}
+							\item si $ l=1 $ : alors $ l-1 + s_l-1 + \sum\limits_{i=1}^{l-1} s_i = s_1 - 1 $ \\
+							D'après la remarque que l'on a faite, pour avoir $ T(j,l) = \true $, il faudrait avoir $ j \geq s_1-1 $. \\
+							Or, on a supposé $ j < s_l-1 = s_1 - 1 $ \\
+							Donc pour $ l=1 $, $ T(j,l) = \false $
+							\item si $ l \geq 2 $ : alors $ l-1 + s_l-1 + \sum\limits_{i=1}^{l-1} s_i > s_l - 1 $ car $ l-1 > 0 $ \\
+							Pour avoir $ T(j,l) = \true $, il faudrait avoir $ j > s_l - 1 $ \\
+							Or, on a supposé $ j < s_l-1 $ \\
+							Donc pour $ l \geq 2 $, $ T(j,l) = \false $
+						\end{itemize}
+						Conclusion : \fbox{$ \forall l \geq 1 $, si $ j < s_l - 1 $, alors  $ T(j,l) = \false $}
+					\item cas de base 2b : supposons $ j = s_l - 1 $
+						\begin{itemize}
+							\item si $ l=1 $ : alors de même, $ l-1 + s_l-1 + \sum\limits_{i=1}^{l-1} s_i = s_1 - 1 $ \\
+							D'après la remarque que l'on a faite, pour avoir $ T(j,l) = \true $, il faudrait avoir $ j \geq s_1-1 $. \\
+							Donc, en particulier pour $ j = s_l - 1 $, $ T(j,l) = \true $
+							\item si $ l \geq 2 $ : alors de même, $ l-1 + s_l-1 + \sum\limits_{i=1}^{l-1} s_i > s_l - 1 $ car $ l-1 > 0 $ \\
+							Pour avoir $ T(j,l) = \true $, il faudrait avoir $ j > s_l - 1 $ \\
+							Or, on a supposé $ j = s_l-1 $ \\
+							Donc pour $ l \geq 2 $, $ T(j,l) = \false $
+						\end{itemize}
+						Conclusion : \fbox{si $ j = s_l - 1 $, alors $ T(j,l) = \left\{
+							\begin{array}{ll}
+							\true & \text{si } l=1 \\
+							\false & \text{si } l \geq 2 \\
+							\end{array} \right.$}
+				\end{itemize}
+			
+			\paragraph{Q3}
+				On a la relation de récurrence suivante : $ \boxed{T(j,l) = T(j-1,l) \vee T(j - s_l - 1,l-1)} $ \\
+				Avec comme cas de base : $ \forall j \in \{0,...,M-1\}, T(j,0) = \true $, et $ T(s_1-1,1) = \true $
+				En effet :
+				\begin{itemize}
+					\item si on arrive à faire rentrer les $l$ premiers blocs dans les $j$ premières cases (c'est-à-dire si $ T(j-1,l) = \true $), alors on arrivera à les faire rentrer dans les $j+1$ premières cases (c'est-à-dire $ T(j,l) = \true $) en coloriant la $ j $-ème case en blanc.
+					\item si on arrive à faire rentrer les $l-1$ premiers blocs sur un certain nombre de cases $j'$ (c'est-à-dire si $ T(j',l-1) = \true $), alors on pourra faire rentrer le bloc $l$ si et seulement si $ j \geq j' + s_l + 1 $ (le +1 venant de la case blanche séparant le bloc $l-1$ du bloc $l$), donc en particulier si $ j = j' + s_l + 1 $, c'est-à-dire si $ j' = j - s_l - 1 $. Ainsi, on a $ T(j,l) = \true $, et la $j$-ème case est noire et correspond à la dernière case du bloc $l$.
+					\item il suffit que l'une des deux conditions précédentes soit vraie pour que $ T(j,l) $ soit égale à vrai, d'où le $ \vee $.
+					\item les cas de base sont les cas de base 1 et 2b pour $ l=1 $ de la question précédente.
+				\end{itemize}
+				
+			\paragraph{Q4}
+				\textit{Commentaire : j'ai pas testé, mais ça doit être quelque chose comme ça :}
+				
+				\begin{algorithm} [H]
+					\caption{ColorierLigne}
+					\label{color_ligne}
+					\begin{algorithmic}
+						\REQUIRE $T, s=(s_1,...,s_k), j, l$ 
+						\ENSURE Retourne $ T(j,l) $
+						\IF{$ l = 0 $}
+							\RETURN vrai
+						\ELSIF{$ j=s[1]-1 $ et $ l=1 $}
+							\RETURN vrai
+						\ELSE
+							\RETURN ColorierLigne($ T,s,j-1,l $) ou ColorierLigne($ T,s,j-s_l-1,l-1 $)
+						\ENDIF
+					\end{algorithmic}
+				\end{algorithm}
 		
+		\subsection{Généralisation}
+		
+			\paragraph{Q5}
+			\paragraph{Q6}
+			\paragraph{Q7}
+		
+		\subsection{Propagation}
+				
+			
+			\paragraph{Q8}
+			\paragraph{Q9}
+			
+		\subsection{Tests}
+			
+			\paragraph{Q10}
+			\paragraph{Q11}
+						
 \end{document}
