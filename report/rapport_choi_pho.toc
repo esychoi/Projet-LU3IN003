@@ -4,13 +4,13 @@
 \contentsline {paragraph}{Q2}{2}
 \contentsline {paragraph}{Q3}{3}
 \contentsline {paragraph}{Q4}{3}
-\contentsline {subsection}{\numberline {1.2}G\IeC {\'e}n\IeC {\'e}ralisation}{3}
-\contentsline {paragraph}{Q5}{3}
-\contentsline {paragraph}{Q6}{3}
-\contentsline {paragraph}{Q7}{4}
-\contentsline {subsection}{\numberline {1.3}Propagation}{4}
-\contentsline {paragraph}{Q8}{4}
-\contentsline {paragraph}{Q9}{4}
-\contentsline {subsection}{\numberline {1.4}Tests}{4}
-\contentsline {paragraph}{Q10}{4}
-\contentsline {paragraph}{Q11}{5}
+\contentsline {subsection}{\numberline {1.2}G\IeC {\'e}n\IeC {\'e}ralisation}{5}
+\contentsline {paragraph}{Q5}{5}
+\contentsline {paragraph}{Q6}{5}
+\contentsline {paragraph}{Q7}{5}
+\contentsline {subsection}{\numberline {1.3}Propagation}{5}
+\contentsline {paragraph}{Q8}{5}
+\contentsline {paragraph}{Q9}{5}
+\contentsline {subsection}{\numberline {1.4}Tests}{5}
+\contentsline {paragraph}{Q10}{5}
+\contentsline {paragraph}{Q11}{6}

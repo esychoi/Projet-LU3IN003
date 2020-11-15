@@ -77,16 +77,15 @@
 							Or, on a supposé $ j = s_l-1 $ \\
 							Donc pour $ l \geq 2 $, $ T(j,l) = \false $
 						\end{itemize}
-						Conclusion : \fbox{si $ j = s_l - 1 $, alors $ T(j,l) = \left\{
-							\begin{array}{ll}
-							\true & \text{si } l=1 \\
-							\false & \text{si } l \geq 2 \\
-							\end{array} \right.$}
+						Conclusion : \fbox{si $ j = s_l - 1 $, alors $ T(j,l) = \begin{cases}
+							\true \quad \text{si } l=1 \\
+							\false \quad \text{si } l \geq 2 \\
+							\end{cases} $}
 				\end{itemize}
 			
 			\paragraph{Q3}
 				On a la relation de récurrence suivante : $ \boxed{T(j,l) = T(j-1,l) \vee T(j - s_l - 1,l-1)} $ \\
-				Avec comme cas de base : $ \forall j \in \{0,...,M-1\}, T(j,0) = \true $, et $ T(s_1-1,1) = \true $
+				Avec comme cas de base : $ \forall j \in \{0,...,M-1\}, T(j,0) = \true $, et $ T(s_1-1,1) = \true $. \\
 				En effet :
 				\begin{itemize}
 					\item si on arrive à faire rentrer les $l$ premiers blocs dans les $j$ premières cases (c'est-à-dire si $ T(j-1,l) = \true $), alors on arrivera à les faire rentrer dans les $j+1$ premières cases (c'est-à-dire $ T(j,l) = \true $) en coloriant la $ j $-ème case en blanc.
@@ -95,24 +94,56 @@
 					\item les cas de base sont les cas de base 1 et 2b pour $ l=1 $ de la question précédente.
 				\end{itemize}
 				
-			\paragraph{Q4}
-				\textit{Commentaire : j'ai pas testé, mais ça doit être quelque chose comme ça :}
-				
+			\paragraph{Q4} L'algorithme en pseudo-code est le suivant :
 				\begin{algorithm} [H]
-					\caption{ColorierLigne}
-					\label{color_ligne}
-					\begin{algorithmic}
+					\caption{ColoriagePossibleRec}
+					\label{color_poss_rec}
+					\begin{algorithmic}[1]
 						\REQUIRE $T, s=(s_1,...,s_k), j, l$ 
-						\ENSURE Retourne $ T(j,l) $
-						\IF{$ l = 0 $}
-							\RETURN vrai
-						\ELSIF{$ j=s[1]-1 $ et $ l=1 $}
-							\RETURN vrai
+						\ENSURE Retourne le tableau $ T $ tel que $ T[j][l] = T(j,l) $. On suppose que pour le premier appel, $ j = M-1 $ et $ l = k $
+						\STATE Initialiser toutes les cases de $ T $ à -1
+						\FOR{$ j $ allant de 0 à $M-1$}
+							\STATE $ T[j][0] \leftarrow \true $
+						\ENDFOR
+						\STATE $ T[s_1-1][1] \leftarrow \true $
+						\IF{$j < s_{l-1}-1 $}
+							\STATE $ T[j][l] \leftarrow \false $
+							\RETURN faux
+						\ELSIF{$ j = s_{l-1}-1 $}
+							\IF{$ l = 1 $}
+								\STATE $ T[j][l] \leftarrow \true $
+								\RETURN vrai
+							\ELSE
+								\STATE$ T[j][l] \leftarrow \false $
+								\RETURN faux
+							\ENDIF
 						\ELSE
-							\RETURN ColorierLigne($ T,s,j-1,l $) ou ColorierLigne($ T,s,j-s_l-1,l-1 $)
+							\IF{$ (T[j-1][l] \neq -1) $ et $ (T[j-s_{l-1}-1][l-1] \neq -1) $}
+								\STATE $ T[j][l] \leftarrow (T[j-1][l] \text{ ou } T[j-s_{l-1}-1][l-1]) $
+								\RETURN $ T[j][l] $
+							\ELSIF{$ T[j-1][l] \neq -1 $}
+								\STATE $ T[j][l] \leftarrow ((T[j-1][l]) \text{ ou } ColoriagePossibleRec(T,s,j-s_{l-1}-1,l-1)) $
+								\RETURN $ T[j][l] $
+							\ELSIF{$ T[j-s_{l-1}-1][l-1] \neq -1 $}
+								\STATE $ T[j][l] \leftarrow ((T[j-s_{l-1}-1][l-1] \text{ ou } ColoriagePossibleRec(T,s,j-1,l)) $
+								\RETURN $ T[j][l] $
+							\ELSE
+								\STATE $ T[j][l] \leftarrow (ColoriagePossibleRec(T,s,j-1,l) \text{ ou } ColoriagePossibleRec(T,s,j-s_{l-1}-1,l-1)) $
+								\RETURN $ T[j][l] $
+							\ENDIF
 						\ENDIF
 					\end{algorithmic}
 				\end{algorithm}
+		
+				\begin{itemize}
+					\item ligne 1 : initialisation de la matrice
+					\item lignes 2-5 : cas de base du cas 2c
+					\item lignes 6-8 : cas 1
+					\item lignes 9-16 : cas 2a
+					\item lignes 17-31 : cas 2c
+				\end{itemize}
+	
+				En réalité, l'algorithme ne calcule pas nécessairement toutes les cases du tableau $ T $ : il ne calcule que les valeurs utiles, celles qui répondent à la question 1. En effet, si le résultat voulu est calculé, on le retourne ; sinon, on stocke progressivement les valeurs qui permettent le calculer. C'est le principe de la programmation dynamique.
 		
 		\subsection{Généralisation}
 		
