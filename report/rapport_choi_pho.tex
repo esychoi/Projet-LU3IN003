@@ -106,10 +106,12 @@
 							\STATE $ T[j][0] \leftarrow \true $
 						\ENDFOR
 						\STATE $ T[s_1-1][1] \leftarrow \true $
-						\IF{$j < s_{l-1}-1 $}
+						\IF{$ T[j][l] \neq -1 $}
+							\RETURN $ T[j][l] $
+						\ELSIF{$j < s_l-1 $}
 							\STATE $ T[j][l] \leftarrow \false $
 							\RETURN faux
-						\ELSIF{$ j = s_{l-1}-1 $}
+						\ELSIF{$ j = s_l-1 $}
 							\IF{$ l = 1 $}
 								\STATE $ T[j][l] \leftarrow \true $
 								\RETURN vrai
@@ -118,19 +120,8 @@
 								\RETURN faux
 							\ENDIF
 						\ELSE
-							\IF{$ (T[j-1][l] \neq -1) $ et $ (T[j-s_{l-1}-1][l-1] \neq -1) $}
-								\STATE $ T[j][l] \leftarrow (T[j-1][l] \text{ ou } T[j-s_{l-1}-1][l-1]) $
-								\RETURN $ T[j][l] $
-							\ELSIF{$ T[j-1][l] \neq -1 $}
-								\STATE $ T[j][l] \leftarrow ((T[j-1][l]) \text{ ou } ColoriagePossibleRec(T,s,j-s_{l-1}-1,l-1)) $
-								\RETURN $ T[j][l] $
-							\ELSIF{$ T[j-s_{l-1}-1][l-1] \neq -1 $}
-								\STATE $ T[j][l] \leftarrow ((T[j-s_{l-1}-1][l-1] \text{ ou } ColoriagePossibleRec(T,s,j-1,l)) $
-								\RETURN $ T[j][l] $
-							\ELSE
-								\STATE $ T[j][l] \leftarrow (ColoriagePossibleRec(T,s,j-1,l) \text{ ou } ColoriagePossibleRec(T,s,j-s_{l-1}-1,l-1)) $
-								\RETURN $ T[j][l] $
-							\ENDIF
+							\STATE $ T[j][l] \leftarrow (ColoriagePossibleRec(T,s,j-1,l) \text{ ou } ColoriagePossibleRec(T,s,j-s_l-1,l-1)) $
+							\RETURN $ T[j][l] $
 						\ENDIF
 					\end{algorithmic}
 				\end{algorithm}
@@ -138,9 +129,9 @@
 				\begin{itemize}
 					\item ligne 1 : initialisation de la matrice
 					\item lignes 2-5 : cas de base du cas 2c
-					\item lignes 6-8 : cas 1
-					\item lignes 9-16 : cas 2a
-					\item lignes 17-31 : cas 2c
+					\item lignes 8-10 : cas 1
+					\item lignes 11-18 : cas 2a
+					\item lignes 19-22 : cas 2c
 				\end{itemize}
 	
 				En réalité, l'algorithme ne calcule pas nécessairement toutes les cases du tableau $ T $ : il ne calcule que les valeurs utiles, celles qui répondent à la question 1. En effet, si le résultat voulu est calculé, on le retourne ; sinon, on stocke progressivement les valeurs qui permettent le calculer. C'est le principe de la programmation dynamique.
@@ -148,6 +139,7 @@
 		\subsection{Généralisation}
 		
 			\paragraph{Q5}
+				Les cas 1, 2a et 2b ne changent pas car ils sont vérifiés quelles que soit les couleurs des cases précédentes. \\
 			\paragraph{Q6}
 			\paragraph{Q7}
 		
