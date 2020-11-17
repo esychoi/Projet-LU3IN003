@@ -1,5 +1,5 @@
 """ Constantes """
 
-VIDE = -1
-BLANC = 0
-NOIR = 1
+VIDE = 0
+BLANC = 1
+NOIR = 2

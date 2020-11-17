@@ -22,7 +22,7 @@ T = init_matrice(M,k+1,VIDE)
 # T[s[0]-1][1] = True
 
 #ColoriagePossibleRec(T,s,M-1,k)
-ColoriagePossibleRec2(L2,s,M-1,k,T)
+ColoriagePossibleRec2(L3,s,M-1,k,T)
 
 affiche_matrice(T)
 
