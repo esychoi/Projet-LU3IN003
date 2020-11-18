@@ -52,32 +52,37 @@ def TestVal(V,j1,j2,v):
 # Question 5 : construit le tableau T correspondant au vecteur V tel que T[j][l] = T(j,l) récursivement, sachant que certaines cases peuvent être déjà coloriées en blanc ou en noir
 # hypothèse : au début, j=M-1 et l=k
 def ColoriagePossibleRec2(V,s,j,l,T):
-    if T[j][l] != VIDE:
+    if T[j][l] != VIDE: #si on a déjà calculé la valeur recherchée
         return T[j][l]
     elif l == 0: #cas de base 1
-        T[j][l] = TestVal(V,0,j,NOIR)
+        T[j][l] = TestVal(V,0,j,NOIR)   #test s'il y a une case noire avant (i,j), auquel cas T(j,l)=faux puisqu'on est pas censé avoir de bloc noir du tout
         return T[j][l]
-    elif (l == 1) and (j == s[l-1]-1): #cas de base de 2c
-        T[j][l] = TestVal(V,0,j,BLANC)
+    elif (l == 1) and (j == s[0]-1): #cas de base de 2c
+        T[j][l] = TestVal(V,0,j,BLANC)  #test s'il y a une case blanche avant (i,j), auquel cas T(j,l)=faux puisque les j+1 premières cases contiennet le bloc 1
         return T[j][l] 
-    elif (j < 0) or (l < 0):
+    elif (j < 0) or (l < 0):    #je le met car en python liste[-i] donne le i-ème élément de liste en partant de la fin, et nous on veut pas ça
         return False
-    elif j <= s[l-1]-1: #cas de base 2a
-        T[j][l] = False 
+    elif j <= s[l-1]-1: #cas de base 2a et 2b pour l!=1
+        T[j][l] = False
         return False
+#A partir de là, on est dans le cas 2c j > s[l-1]-1
 
-    elif T[j][l] == NOIR: #pas plutot V[j] ?
+    #si (i,j) est blanche
+    elif V[j] == NOIR:   #on ne peut pas avoir (i,j) noire
         b1 = False
-    else:
-        b1 = ColoriagePossibleRec2(V,s,j-1,l,T) # si V(j)!=NOIR alors T(j-1,l)=>T(j,l)
+    else:   #il faut tester si les l premiers blocs rentrent dans les j premières cases
+        b1 = ColoriagePossibleRec2(V,s,j-1,l,T) 
     
-    if not TestVal(V,j-s[l-1]+1,j,BLANC): #s'il existe une case des s[l] dernieres cases de la ligne de couleur blanche alors on ne peut pas faire rentrer le dernier bloc
+    #si (i,j) est noire, alors (i,j) contient la dernière case du bloc l
+    if not TestVal(V,j-s[l-1]+1,j,BLANC):   #teste s'il y a une case blanche entre (i,j-(s[l-1]-1)) et (i,j), c'est-à-dire tout le long du bloc l
+        b2 = False  #car il ne doit pas y avoir de case blanche entre j-(s[l-1]-1) et j (puisqu'on est dans le bloc noir l)
+    elif V[j-s[l-1]] == NOIR:   #si le test est vérifié, cela signifie que le bloc l se termine à la case (i,j-1) donc (i,j) ne pourrait être noire
         b2 = False
-    elif V[j-s[l-1]] == NOIR: #si cette condition est vérifée alors on ne peut pas espacer les 2 derniers blocs.
-        b2 = False
-    else:
-        b2 = ColoriagePossibleRec2(V,s,j-s[l-1]-1,l-1,T)  #si on entre dans cet else alors c'est à dire que l'on peut faire rentrer le dernier bloc dans le vecteur V, on regarde donc si c'est vrai pour les blocs précédents si oui alors T(j,l) d'où sous les condition predédente T(j-s[l-1]-1,l-1)=> T(j,l)
+    else:   #il faut tester si les l-1 premiers blocs rentrent dans les j-(s[l-1]1) premières cases
+        b2 = ColoriagePossibleRec2(V,s,j-s[l-1]-1,l-1,T)
     
+    #si on ne sait pas la couleur de (i,j), alors on a calculé b1 et b2
+
     # if b1 == True:      # en version if-else c'est ça non ? pourquoi ça marche pas ?
     #     T[j][l] = True  # dans tous les cas, la version b1 or b2 est mieux car c'est la relation de récurrence de 2c
     # elif b2 == True:
@@ -137,17 +142,6 @@ def lecture(filepath):
 # colorie par récurrence un max de cases de la ligne i 
 # TODO
 def ColoreLig(G,i): #on veut donc colorier V = G[i] avec la séquence s = G[M+1]
-    #M = len(G)
-    #l = len(G[M+1])
-    #T = init_matrice(M-1,len(G[M+1]),0)
-
-    #if not(ColoriagePossibleRec2(G[i],G[M+1],M,l,T)):
-        #return (False,G)
-    
-    #else:
-
-
-
     return
 
 # colorie par récurrence un max de cases de la colonne j
