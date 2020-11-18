@@ -63,19 +63,20 @@ def ColoriagePossibleRec2(V,s,j,l,T):
     elif (j < 0) or (l < 0):
         return False
     elif j <= s[l-1]-1: #cas de base 2a
-        T[j][l] = False
+        T[j][l] = False 
         return False
-    elif T[j][l] == NOIR:
+
+    elif T[j][l] == NOIR: #pas plutot V[j] ?
         b1 = False
     else:
-        b1 = ColoriagePossibleRec2(V,s,j-1,l,T)
+        b1 = ColoriagePossibleRec2(V,s,j-1,l,T) # si V(j)!=NOIR alors T(j-1,l)=>T(j,l)
     
-    if not TestVal(V,j-s[l-1]+1,j,BLANC):
+    if not TestVal(V,j-s[l-1]+1,j,BLANC): #s'il existe une case des s[l] dernieres cases de la ligne de couleur blanche alors on ne peut pas faire rentrer le dernier bloc
         b2 = False
-    elif V[j-s[l-1]] == NOIR:
+    elif V[j-s[l-1]] == NOIR: #si cette condition est vérifée alors on ne peut pas espacer les 2 derniers blocs.
         b2 = False
     else:
-        b2 = ColoriagePossibleRec2(V,s,j-s[l-1]-1,l-1,T)
+        b2 = ColoriagePossibleRec2(V,s,j-s[l-1]-1,l-1,T)  #si on entre dans cet else alors c'est à dire que l'on peut faire rentrer le dernier bloc dans le vecteur V, on regarde donc si c'est vrai pour les blocs précédents si oui alors T(j,l) d'où sous les condition predédente T(j-s[l-1]-1,l-1)=> T(j,l)
     
     # if b1 == True:      # en version if-else c'est ça non ? pourquoi ça marche pas ?
     #     T[j][l] = True  # dans tous les cas, la version b1 or b2 est mieux car c'est la relation de récurrence de 2c
@@ -135,7 +136,18 @@ def lecture(filepath):
 
 # colorie par récurrence un max de cases de la ligne i 
 # TODO
-def ColoreLig(G,i):
+def ColoreLig(G,i): #on veut donc colorier V = G[i] avec la séquence s = G[M+1]
+    #M = len(G)
+    #l = len(G[M+1])
+    #T = init_matrice(M-1,len(G[M+1]),0)
+
+    #if not(ColoriagePossibleRec2(G[i],G[M+1],M,l,T)):
+        #return (False,G)
+    
+    #else:
+
+
+
     return
 
 # colorie par récurrence un max de cases de la colonne j
