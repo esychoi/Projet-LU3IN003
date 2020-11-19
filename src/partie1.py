@@ -139,7 +139,8 @@ def lecture(filepath):
                     retourligne.append(x)
     #print(retourligne)
     #print(retourcolonne)
-    return (retourligne,retourcolonne)
+    grille = init_matrice(len(retourligne),len(retourcolonne),VIDE)
+    return (grille,retourligne,retourcolonne)
 
 # colorie par récurrence un max de cases de la ligne i 
 # TODO
@@ -149,16 +150,16 @@ def ColoreLig(G,i): #on veut donc colorier V = G[0][i] avec la séquence s = G[1
     M = len(V)
     j = M-1
     l = len(s)
-    T = init_matrice(j,l,0)
+    T = init_matrice(M+1,l+1,0)
     if not(ColoriagePossibleRec2(V,s,j,l,T)):
         return (False,G)
     else:
-        for k in range(0,j):
+        for k in range(0,j-1):
             if V[k]==VIDE:
-                T = init_matrice(j,l,0)
+                T = init_matrice(M+1,l+1,0)
                 V[k]=BLANC
                 caseb = ColoriagePossibleRec2(V,s,j,l,T)
-                T = init_matrice(j,l,0)
+                T = init_matrice(M+1,l+1,0)
                 V[k]=NOIR
                 casen = ColoriagePossibleRec2(V,s,j,l,T)
                 if (caseb and not(casen)):
@@ -168,6 +169,7 @@ def ColoreLig(G,i): #on veut donc colorier V = G[0][i] avec la séquence s = G[1
                 elif (not(caseb) and not(casen)):
                     return(False,G)
     return (True,G)
+
 
 #transforme la j-ieme colonne en une ligne pour etre plus facile a traiter
 def colonnetoligne(G,j):
@@ -185,16 +187,16 @@ def ColoreCol(G,j):
     N = len(V)
     i = N-1
     l = len(s)
-    T = init_matrice(i,l,0)
+    T = init_matrice(N+1,l+1,0)
     if not(ColoriagePossibleRec2(V,s,i,l,T)):
         return (False,G)
     else:
-        for k in range(0,i):
+        for k in range(0,i-1):
             if V[k]==VIDE:
-                T = init_matrice(i,l,0)
+                T = init_matrice(N+1,l+1,0)
                 V[k]=BLANC
                 caseb = ColoriagePossibleRec2(V,s,i,l,T)
-                T = init_matrice(i,l,0)
+                T = init_matrice(N+1,l+1,0)
                 V[k]=NOIR
                 casen = ColoriagePossibleRec2(V,s,i,l,T)
                 if (caseb and not(casen)):
@@ -266,3 +268,14 @@ def propagation(filepath):
     else:
         print("On ne peut pas conclure.")
     
+
+
+Test = lecture("C:\\Projet-LU3IN003\\src\\instances\\1.txt")
+Test2 = coloration(Test)
+
+print(Test[1])
+print(Test[2])
+
+affiche_matrice(Test[0])
+affiche_matrice(Test2[0])
+
