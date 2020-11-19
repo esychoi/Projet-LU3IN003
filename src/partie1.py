@@ -1,5 +1,7 @@
 """ Partie 1 : Méthode incomplète de résolution """
 
+import copy
+
 from constantes import *
 from API_liste_matrice import *
 
@@ -141,19 +143,74 @@ def lecture(filepath):
 
 # colorie par récurrence un max de cases de la ligne i 
 # TODO
-def ColoreLig(G,i): #on veut donc colorier V = G[i] avec la séquence s = G[M+1]
-    return
+def ColoreLig(G,i): #on veut donc colorier V = G[0][i] avec la séquence s = G[1][i]
+    V = copy.deepcopy(G[0][i])
+    s = copy.deepcopy(G[1][i])
+    M = len(V)
+    j = M-1
+    l = len(s)
+    T = init_matrice(j,l,0)
+    if not(ColoriagePossibleRec2(V,s,j,l,T)):
+        return (False,G)
+    else:
+        for k in range(0,j):
+            if V[k]==VIDE:
+                T = init_matrice(j,l,0)
+                V[k]=BLANC
+                caseb = ColoriagePossibleRec2(V,s,j,l,T)
+                T = init_matrice(j,l,0)
+                V[k]=NOIR
+                casen = ColoriagePossibleRec2(V,s,j,l,T)
+                if (caseb and not(casen)):
+                    G[0][i][k] = BLANC
+                elif (casen and not(caseb)):
+                    G[0][i][k] = NOIR
+                elif (not(caseb) and not(casen)):
+                    return(False,G)
+    return (True,G)
+
+#transforme la j-ieme colonne en une ligne pour etre plus facile a traiter
+def colonnetoligne(G,j):
+    V=[]
+    N = len(G[0])
+    for k in range(0,N-1):
+        V.append(G[0][k][j])
+    return V
 
 # colorie par récurrence un max de cases de la colonne j
 # TODO
 def ColoreCol(G,j):
-    return
+    V = colonnetoligne(G,j)
+    s = copy.deepcopy(G[2][j])
+    N = len(V)
+    i = N-1
+    l = len(s)
+    T = init_matrice(i,l,0)
+    if not(ColoriagePossibleRec2(V,s,i,l,T)):
+        return (False,G)
+    else:
+        for k in range(0,i):
+            if V[k]==VIDE:
+                T = init_matrice(i,l,0)
+                V[k]=BLANC
+                caseb = ColoriagePossibleRec2(V,s,i,l,T)
+                T = init_matrice(i,l,0)
+                V[k]=NOIR
+                casen = ColoriagePossibleRec2(V,s,i,l,T)
+                if (caseb and not(casen)):
+                    G[0][k][j] = BLANC
+                elif (casen and not(caseb)):
+                    G[0][k][j] = NOIR
+                elif (not(caseb) and not(casen)):
+                    return(False,G)
+    return (True,G)
+
 
 # Algothme de coloration
 def coloration(A):
-    G = A   #copie de la grille
-    N = len(G)  #nombre de lignes
-    M = len(G[0])   #nombre de colonnes
+    G = copy.deepcopy(A)   #copie de la grille
+    N = len(G[0])  #nombre de lignes
+    M = len(G[0][0])   #nombre de colonnes
     lignesAVoir = [i for i in range(N)]
     colonnesAVoir = [i for i in range(M)]
 
@@ -165,7 +222,7 @@ def coloration(A):
             nouveaux = []   #numéro de colonne des nouvelles cases coloriées de la ligne i
             b = False
             for j in range(M):
-                if G[i][j] != VIDE: #si la case (i,j) est coloriée
+                if G[0][i][j] != VIDE: #si la case (i,j) est coloriée
                     for k in colonnesAVoir: #on teste si j est déjà dans colonnesAVoir
                         if j == k:
                             b = True
@@ -180,7 +237,7 @@ def coloration(A):
                 return("faux",init_matrice(N,0,VIDE))
             nouveaux = []
             for i in range(N):
-                if G[i][j] != VIDE: #si la case (i,j) est coloriée
+                if G[0][i][j] != VIDE: #si la case (i,j) est coloriée
                     for k in lignesAVoir: #on teste si j est déjà dans colonnesAVoir
                         if i == k:
                             b = True
@@ -189,7 +246,7 @@ def coloration(A):
             lignesAVoir = lignesAVoir + nouveaux
             colonnesAVoir = colonnesAVoir.remove(j)
         
-        if matrice_coloriee(G): #si la matrice est entièrement coloriée
+        if matrice_coloriee(G[0]): #si la matrice est entièrement coloriée
             return ("vrai",G)
         else:
             return ("neSaitPas",G)
@@ -203,7 +260,7 @@ def propagation(filepath):
 
     if ok == "vrai":
         print("La solution est :")
-        affiche_matrice(G)
+        affiche_matrice(G[0])
     elif ok == "faux":
         print("L'instance n'a pas de solution.")
     else:
