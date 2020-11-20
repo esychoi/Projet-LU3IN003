@@ -264,3 +264,4 @@ def propagation(filepath):
         print("L'instance n'a pas de solution.")
     else:
         print("On ne peut pas conclure.")
+    
