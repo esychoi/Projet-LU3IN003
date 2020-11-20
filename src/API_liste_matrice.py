@@ -8,7 +8,13 @@ def init_matrice(n,m,v):
 def affiche_matrice(A):
     for i in range(len(A)):
         for j in range(len(A[i])):
-            print(A[i][j], end = ' ')
+            if(A[i][j] == NOIR):
+                print(u"\u25A0", end = ' ')
+            elif(A[i][j] == BLANC):
+                print(u"\u25A1", end = ' ')
+
+            else:
+                print(A[i][j], end = ' ')
         print("\n")
 
 # Teste si la matrice G est entièrement coloriée

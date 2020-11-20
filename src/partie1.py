@@ -234,8 +234,8 @@ def coloration(A):
             if not ok:
                 return ("faux",init_matrice(M,0,VIDE))
             
-            colonnesAVoir = colonnesAVoir + nouveaux
-            lignesAVoir = [x for x in lignesAVoir if not(x==i)] 
+            colonnesAVoir.extend(x for x in nouveaux if x not in colonnesAVoir)
+            lignesAVoir = [x for x in lignesAVoir if not(x==i)]
         
         for j in colonnesAVoir:
             nouveaux = []
@@ -243,7 +243,7 @@ def coloration(A):
             if not ok:
                 return("faux",init_matrice(N,0,VIDE))
             
-            lignesAVoir = lignesAVoir + nouveaux
+            lignesAVoir.extend(x for x in nouveaux if x not in lignesAVoir)
             colonnesAVoir = [x for x in colonnesAVoir if not(x==j)]
         
     if matrice_coloriee(G[0]): #si la matrice est entièrement coloriée
@@ -253,8 +253,7 @@ def coloration(A):
 
 # Question 9 : Algorithme de propagation
 def propagation(filepath):
-    s = lecture(filepath) #génération de la liste des séquences à partir du fichier texte
-    A = init_matrice(len(s[0]),len(s[1]),VIDE) #initalisation grille de jeu
+    A = lecture(filepath) #génération de la liste des séquences et de la grille de jeu à partir du fichier texte
 
     (ok,G) = coloration(A)
 
@@ -268,7 +267,7 @@ def propagation(filepath):
     
 
 
-'''Test = lecture("./instances/0.txt")
+Test = lecture("./instances/8.txt")
 print("\n")
 print(Test[1])
 print(Test[2])
@@ -276,9 +275,10 @@ print("\n")
 
 
 test2 = coloration(Test)
-
-print(test2[0])
-print("\n")
-affiche_matrice(test2[1][0])'''
+if test2[0] != "vrai":
+    print("ERREUR")
+#print(test2[0])
+#print("\n")
+affiche_matrice(test2[1][0])
     
 
