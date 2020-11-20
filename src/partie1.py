@@ -264,21 +264,3 @@ def propagation(filepath):
         print("L'instance n'a pas de solution.")
     else:
         print("On ne peut pas conclure.")
-    
-
-
-Test = lecture("./instances/8.txt")
-print("\n")
-print(Test[1])
-print(Test[2])
-print("\n")
-
-
-test2 = coloration(Test)
-if test2[0] != "vrai":
-    print("ERREUR")
-#print(test2[0])
-#print("\n")
-affiche_matrice(test2[1][0])
-    
-
