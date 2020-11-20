@@ -59,7 +59,7 @@ def ColoriagePossibleRec2(V,s,j,l,T):
     elif l == 0: #cas de base 1
         T[j][l] = TestVal(V,0,j,NOIR)   #test s'il y a une case noire avant (i,j), auquel cas T(j,l)=faux puisqu'on est pas censé avoir de bloc noir du tout
         return T[j][l]
-    elif (l == 1) and (j == s[0]-1): #cas de base de 2c
+    elif (l == 1) and (j == s[0]-1): #cas de base de 2b
         T[j][l] = TestVal(V,0,j,BLANC)  #test s'il y a une case blanche avant (i,j), auquel cas T(j,l)=faux puisque les j+1 premières cases contiennet le bloc 1
         return T[j][l] 
     elif (j < 0) or (l < 0):    #je le met car en python liste[-i] donne le i-ème élément de liste en partant de la fin, et nous on veut pas ça
@@ -143,30 +143,31 @@ def lecture(filepath):
     return (grille,retourligne,retourcolonne)
 
 # colorie par récurrence un max de cases de la ligne i 
-# TODO
 def ColoreLig(G,i): #on veut donc colorier V = G[0][i] avec la séquence s = G[1][i]
     V = copy.deepcopy(G[0][i])
     s = copy.deepcopy(G[1][i])
     M = len(V)
     j = M-1
     l = len(s)
-    T = init_matrice(M+1,l+1,0)
-    if not(ColoriagePossibleRec2(V,s,j,l,T)):
+    T = init_matrice(M,l+1,0)
+    if not(ColoriagePossibleRec2(V,s,j,l,T)): #s'il n'y a pas de coloriage possible alors ce puzzle n'a pas de sol
         return (False,G)
     else:
-        for k in range(0,j-1):
-            if V[k]==VIDE:
-                T = init_matrice(M+1,l+1,0)
+        for k in range(0,M):#on parcourt les M cases de la i-eme ligne
+            if V[k]==VIDE: #si on a pas encore colorié cette case
+                T = init_matrice(M,l+1,0)
                 V[k]=BLANC
-                caseb = ColoriagePossibleRec2(V,s,j,l,T)
-                T = init_matrice(M+1,l+1,0)
+                caseb = ColoriagePossibleRec2(V,s,j,l,T) #on test si la case peut etre coloriée en blanc
+                T = init_matrice(M,l+1,0)
                 V[k]=NOIR
-                casen = ColoriagePossibleRec2(V,s,j,l,T)
-                if (caseb and not(casen)):
+                casen = ColoriagePossibleRec2(V,s,j,l,T) #on test si la case peut etre coloriée en noir
+                if(caseb and casen):
+                    V[k] = VIDE 
+                elif (caseb and not(casen)): #si la case peut etre blanche mais ne peut etre noire alors on la colorie en blanc
                     G[0][i][k] = BLANC
-                elif (casen and not(caseb)):
+                elif (casen and not(caseb)): #si la case peut etre noire mais ne peut etre blanche alors on la colorie en noir
                     G[0][i][k] = NOIR
-                elif (not(caseb) and not(casen)):
+                elif (not(caseb) and not(casen)): #si la case ne peut etre coloriée alors le puzzle n'a pas de solution
                     return(False,G)
     return (True,G)
 
@@ -175,31 +176,32 @@ def ColoreLig(G,i): #on veut donc colorier V = G[0][i] avec la séquence s = G[1
 def colonnetoligne(G,j):
     V=[]
     N = len(G[0])
-    for k in range(0,N-1):
+    for k in range(0,N):
         V.append(G[0][k][j])
     return V
 
 # colorie par récurrence un max de cases de la colonne j
-# TODO
 def ColoreCol(G,j):
     V = colonnetoligne(G,j)
     s = copy.deepcopy(G[2][j])
     N = len(V)
     i = N-1
     l = len(s)
-    T = init_matrice(N+1,l+1,0)
+    T = init_matrice(N,l+1,0)
     if not(ColoriagePossibleRec2(V,s,i,l,T)):
         return (False,G)
     else:
-        for k in range(0,i-1):
+        for k in range(0,N):
             if V[k]==VIDE:
-                T = init_matrice(N+1,l+1,0)
+                T = init_matrice(N,l+1,0)
                 V[k]=BLANC
                 caseb = ColoriagePossibleRec2(V,s,i,l,T)
-                T = init_matrice(N+1,l+1,0)
+                T = init_matrice(N,l+1,0)
                 V[k]=NOIR
                 casen = ColoriagePossibleRec2(V,s,i,l,T)
-                if (caseb and not(casen)):
+                if (casen and caseb):
+                    V[k] = VIDE
+                elif (caseb and not(casen)):
                     G[0][k][j] = BLANC
                 elif (casen and not(caseb)):
                     G[0][k][j] = NOIR
@@ -209,6 +211,7 @@ def ColoreCol(G,j):
 
 
 # Algothme de coloration
+# TODO
 def coloration(A):
     G = copy.deepcopy(A)   #copie de la grille
     N = len(G[0])  #nombre de lignes
@@ -220,7 +223,7 @@ def coloration(A):
         for i in lignesAVoir:
             (ok,G) = ColoreLig(G,i) #colorie par récurrence un max de cases de la ligne i ; ok = False si détection d'impossibilité, True sinon
             if not ok:
-                return ("faux",init_matrice(M,0,VIDE))
+                return ("faux1",init_matrice(M,0,VIDE))
             nouveaux = []   #numéro de colonne des nouvelles cases coloriées de la ligne i
             b = False
             for j in range(M):
@@ -231,12 +234,12 @@ def coloration(A):
                     if b == False:
                         nouveaux.append(j)
             colonnesAVoir = colonnesAVoir + nouveaux
-            lignesAVoir = lignesAVoir.remove(i)
+            lignesAVoir.remove(i)
         
         for j in colonnesAVoir:
             (ok,G) = ColoreCol(G,j) #colorie par récurrence un max de cases de la colonne j ; ok = False si détection d'impossibilité, True sinon
             if not ok:
-                return("faux",init_matrice(N,0,VIDE))
+                return("faux2",init_matrice(N,0,VIDE))
             nouveaux = []
             for i in range(N):
                 if G[0][i][j] != VIDE: #si la case (i,j) est coloriée
@@ -246,7 +249,7 @@ def coloration(A):
                     if not b:
                         nouveaux.append(i)
             lignesAVoir = lignesAVoir + nouveaux
-            colonnesAVoir = colonnesAVoir.remove(j)
+            colonnesAVoir.remove(j)
         
         if matrice_coloriee(G[0]): #si la matrice est entièrement coloriée
             return ("vrai",G)
@@ -269,13 +272,4 @@ def propagation(filepath):
         print("On ne peut pas conclure.")
     
 
-
-Test = lecture("C:\\Projet-LU3IN003\\src\\instances\\1.txt")
-Test2 = coloration(Test)
-
-print(Test[1])
-print(Test[2])
-
-affiche_matrice(Test[0])
-affiche_matrice(Test2[0])
 

@@ -9,7 +9,7 @@ def affiche_matrice(A):
     for i in range(len(A)):
         for j in range(len(A[i])):
             print(A[i][j], end = ' ')
-        print()
+        print("\n")
 
 # Teste si la matrice G est entièrement coloriée
 def matrice_coloriee(G):
