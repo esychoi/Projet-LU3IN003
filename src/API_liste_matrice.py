@@ -9,13 +9,14 @@ def affiche_matrice(A):
     for i in range(len(A)):
         for j in range(len(A[i])):
             if(A[i][j] == NOIR):
-                print(u"\u25A0", end = ' ')
+                print(u"\u25A0", end = '')
             elif(A[i][j] == BLANC):
-                print(u"\u25A1", end = ' ')
+                print(u"\u25A1", end = '' )
 
             else:
-                print(A[i][j], end = ' ')
-        print("\n")
+                print(A[i][j])
+        print()
+ 
 
 # Teste si la matrice G est entièrement coloriée
 def matrice_coloriee(G):

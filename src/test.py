@@ -3,7 +3,7 @@
 from constantes import *
 from partie1 import *
 from API_liste_matrice import  *
-
+import time
 # M = 9 #nombre de colonnes
 # k = 3 #nombre de blocs noirs
 
@@ -32,15 +32,23 @@ from API_liste_matrice import  *
 # sequence = lecture(filepath)
 # print(sequence)
 
-Test = lecture("src/instances/9.txt")
-print("\n")
-print(Test[1])
-print(Test[2])
-print("\n")
+#Test = lecture("./instances/0.txt")
 
 
-test2 = coloration(Test)
+#test2 = coloration(Test)
 
-print(test2[0])
-print("\n")
-affiche_matrice(test2[1][0])
+#print(test2[0])
+#print("\n")
+#affiche_matrice(test2[1][0])
+N = 9
+DictionnaireTemps = {}
+for i in range(N):
+    string = "./instances/"+str(i)+".txt"
+    Test = lecture(string)
+    start = time.perf_counter()
+    test2 = coloration(Test)
+    end = time.perf_counter()
+    DictionnaireTemps[i] = (end-start)
+
+for i in range(N):
+    print("l'instance "+str(i)+".txt a ete resolue en "+str(DictionnaireTemps[i])+" s")
