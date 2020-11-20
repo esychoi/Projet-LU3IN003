@@ -246,10 +246,10 @@ def coloration(A):
             lignesAVoir = lignesAVoir + nouveaux
             colonnesAVoir = [x for x in colonnesAVoir if not(x==j)]
         
-        if matrice_coloriee(G[0]): #si la matrice est entièrement coloriée
-            return ("vrai",G)
-        else:
-            return ("neSaitPas",G)
+    if matrice_coloriee(G[0]): #si la matrice est entièrement coloriée
+        return ("vrai",G)
+    else:
+        return ("neSaitPas",G)
 
 # Question 9 : Algorithme de propagation
 def propagation(filepath):
@@ -268,26 +268,17 @@ def propagation(filepath):
     
 
 
-Test = lecture("./instances/0.txt")
-
+'''Test = lecture("./instances/0.txt")
+print("\n")
 print(Test[1])
 print(Test[2])
+print("\n")
 
-'''affiche_matrice(Test[0])
-N = len(Test[0])
-M = len(Test[0][0])
-for k in range(M+N):
-    for i in range(N):
-        nouveaux = []
-        ColoreLig(Test,i,nouveaux)
-        print(nouveaux)
-    for j in range(M):
-        nouveaux = []
-        ColoreCol(Test,j,nouveaux)
-        print(nouveaux)
-affiche_matrice(Test[0])'''
 
 test2 = coloration(Test)
-affiche_matrice(test2[0])
+
+print(test2[0])
+print("\n")
+affiche_matrice(test2[1][0])'''
     
 
