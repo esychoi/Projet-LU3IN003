@@ -143,7 +143,7 @@ def lecture(filepath):
     return (grille,retourligne,retourcolonne)
 
 # colorie par récurrence un max de cases de la ligne i 
-def ColoreLig(G,i): #on veut donc colorier V = G[0][i] avec la séquence s = G[1][i]
+def ColoreLig(G,i,nouveaux): #on veut donc colorier V = G[0][i] avec la séquence s = G[1][i]
     V = copy.deepcopy(G[0][i])
     s = copy.deepcopy(G[1][i])
     M = len(V)
@@ -161,12 +161,16 @@ def ColoreLig(G,i): #on veut donc colorier V = G[0][i] avec la séquence s = G[1
                 T = init_matrice(M,l+1,0)
                 V[k]=NOIR
                 casen = ColoriagePossibleRec2(V,s,j,l,T) #on test si la case peut etre coloriée en noir
-                if(caseb and casen):
+                if(caseb and casen): #si la case peut etre coloriee en noir ou blanc on ne peut rien en conclure donc on remet V[k] a VIDE
                     V[k] = VIDE 
                 elif (caseb and not(casen)): #si la case peut etre blanche mais ne peut etre noire alors on la colorie en blanc
+                    V[k] = BLANC
                     G[0][i][k] = BLANC
+                    nouveaux.append(k)
                 elif (casen and not(caseb)): #si la case peut etre noire mais ne peut etre blanche alors on la colorie en noir
+                    V[k] = NOIR
                     G[0][i][k] = NOIR
+                    nouveaux.append(k)
                 elif (not(caseb) and not(casen)): #si la case ne peut etre coloriée alors le puzzle n'a pas de solution
                     return(False,G)
     return (True,G)
@@ -181,7 +185,7 @@ def colonnetoligne(G,j):
     return V
 
 # colorie par récurrence un max de cases de la colonne j
-def ColoreCol(G,j):
+def ColoreCol(G,j,nouveaux):
     V = colonnetoligne(G,j)
     s = copy.deepcopy(G[2][j])
     N = len(V)
@@ -202,9 +206,13 @@ def ColoreCol(G,j):
                 if (casen and caseb):
                     V[k] = VIDE
                 elif (caseb and not(casen)):
+                    V[k] = BLANC
                     G[0][k][j] = BLANC
+                    nouveaux.append(k)
                 elif (casen and not(caseb)):
+                    V[k] = NOIR
                     G[0][k][j] = NOIR
+                    nouveaux.append(k)
                 elif (not(caseb) and not(casen)):
                     return(False,G)
     return (True,G)
@@ -221,35 +229,22 @@ def coloration(A):
 
     while (lignesAVoir != []) or (colonnesAVoir != []):
         for i in lignesAVoir:
-            (ok,G) = ColoreLig(G,i) #colorie par récurrence un max de cases de la ligne i ; ok = False si détection d'impossibilité, True sinon
-            if not ok:
-                return ("faux1",init_matrice(M,0,VIDE))
             nouveaux = []   #numéro de colonne des nouvelles cases coloriées de la ligne i
-            b = False
-            for j in range(M):
-                if G[0][i][j] != VIDE: #si la case (i,j) est coloriée
-                    for k in colonnesAVoir: #on teste si j est déjà dans colonnesAVoir
-                        if j == k:
-                            b = True
-                    if b == False:
-                        nouveaux.append(j)
+            (ok,G) = ColoreLig(G,i,nouveaux) #colorie par récurrence un max de cases de la ligne i ; ok = False si détection d'impossibilité, True sinon
+            if not ok:
+                return ("faux",init_matrice(M,0,VIDE))
+            
             colonnesAVoir = colonnesAVoir + nouveaux
-            lignesAVoir.remove(i)
+            lignesAVoir = [x for x in lignesAVoir if not(x==i)] 
         
         for j in colonnesAVoir:
-            (ok,G) = ColoreCol(G,j) #colorie par récurrence un max de cases de la colonne j ; ok = False si détection d'impossibilité, True sinon
-            if not ok:
-                return("faux2",init_matrice(N,0,VIDE))
             nouveaux = []
-            for i in range(N):
-                if G[0][i][j] != VIDE: #si la case (i,j) est coloriée
-                    for k in lignesAVoir: #on teste si j est déjà dans colonnesAVoir
-                        if i == k:
-                            b = True
-                    if not b:
-                        nouveaux.append(i)
+            (ok,G) = ColoreCol(G,j,nouveaux) #colorie par récurrence un max de cases de la colonne j ; ok = False si détection d'impossibilité, True sinon
+            if not ok:
+                return("faux",init_matrice(N,0,VIDE))
+            
             lignesAVoir = lignesAVoir + nouveaux
-            colonnesAVoir.remove(j)
+            colonnesAVoir = [x for x in colonnesAVoir if not(x==j)]
         
         if matrice_coloriee(G[0]): #si la matrice est entièrement coloriée
             return ("vrai",G)
@@ -272,4 +267,27 @@ def propagation(filepath):
         print("On ne peut pas conclure.")
     
 
+
+Test = lecture("./instances/0.txt")
+
+print(Test[1])
+print(Test[2])
+
+'''affiche_matrice(Test[0])
+N = len(Test[0])
+M = len(Test[0][0])
+for k in range(M+N):
+    for i in range(N):
+        nouveaux = []
+        ColoreLig(Test,i,nouveaux)
+        print(nouveaux)
+    for j in range(M):
+        nouveaux = []
+        ColoreCol(Test,j,nouveaux)
+        print(nouveaux)
+affiche_matrice(Test[0])'''
+
+test2 = coloration(Test)
+affiche_matrice(test2[0])
+    
 
