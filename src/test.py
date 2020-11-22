@@ -3,6 +3,7 @@
 from constantes import *
 from partie1 import *
 from API_liste_matrice import  *
+from partie2 import *
 import time
 # M = 9 #nombre de colonnes
 # k = 3 #nombre de blocs noirs
@@ -40,6 +41,7 @@ import time
 #print(test2[0])
 #print("\n")
 #affiche_matrice(test2[1][0])
+'''
 N = 9
 DictionnaireTemps = {}
 for i in range(N):
@@ -54,7 +56,7 @@ for i in range(N):
 for i in range(N):
     print("l'instance "+str(i)+".txt a ete resolue en "+str(DictionnaireTemps[i])+" s")
 
-'''Test = lecture("./instances/9.txt")
+Test = lecture("./instances/9.txt")
 start = time.perf_counter()
 test2 = coloration(Test)
 end = time.perf_counter()
@@ -69,3 +71,7 @@ end = time.perf_counter()
 print("l'instance 10.txt a ete resolue en "+str((end-start))+" s")
 
 affiche_matrice(test2[1][0])'''
+
+Test = lecture("./instances/13.txt")
+test2 = Enumeration(Test)
+affiche_matrice(test2[1][0])
