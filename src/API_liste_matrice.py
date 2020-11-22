@@ -16,6 +16,7 @@ def affiche_matrice(A):
             else:
                 print(A[i][j])
         print()
+    print()
  
 
 # Teste si la matrice G est entièrement coloriée

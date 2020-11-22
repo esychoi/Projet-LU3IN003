@@ -49,6 +49,23 @@ for i in range(N):
     test2 = coloration(Test)
     end = time.perf_counter()
     DictionnaireTemps[i] = (end-start)
+    affiche_matrice(test2[1][0])
 
 for i in range(N):
     print("l'instance "+str(i)+".txt a ete resolue en "+str(DictionnaireTemps[i])+" s")
+
+'''Test = lecture("./instances/9.txt")
+start = time.perf_counter()
+test2 = coloration(Test)
+end = time.perf_counter()
+
+print("l'instance 9.txt a ete resolue en "+str((end-start))+" s")
+
+Test = lecture("./instances/10.txt")
+start = time.perf_counter()
+test2 = coloration(Test)
+end = time.perf_counter()
+
+print("l'instance 10.txt a ete resolue en "+str((end-start))+" s")
+
+affiche_matrice(test2[1][0])'''

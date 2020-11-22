@@ -254,3 +254,42 @@ def propagation(filepath):
         print("L'instance n'a pas de solution.")
     else:
         print("On ne peut pas conclure.")
+#TODO
+def colorieretpropager():
+    return
+
+def enum_rec(A,k,c):
+    G = copy.deepcopy(A)   #copie de la grille
+    N = len(G[0])  #nombre de lignes
+    M = len(G[0][0])   #nombre de colonnes
+    if (k==M*N):
+        return True
+    i = k // M
+    j = k % N
+    (ok,A0) = colorieretpropager(G,i,j,c)
+    if (ok == False):
+        return(False,A0)
+    if (ok):
+        return(True,A0)
+    k1 = k+1 #trouver la bonne valeur
+    (ok,A1) = enum_rec(A0,k1,BLANC)
+    if ok:
+        return (ok,A1)
+    else:
+        (ok,A1) = enum_rec(A0,k1,NOIR)
+        if ok:
+            return (ok,A1)
+    return (False,A)
+
+def Enumeration(A):
+    (ok,A0) = coloration(A)
+    if(ok=="faux"):
+        return (False,A0)
+    (ok1,A1) = enum_rec(A0,0,BLANC)
+    if (ok1):
+        return (ok1,A1)
+    else:
+        (ok2,A2) = enum_rec(A0,0,NOIR)
+        if(ok2):
+            return (ok2,A2)
+    return (False,A)
