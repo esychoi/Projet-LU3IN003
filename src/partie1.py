@@ -54,7 +54,7 @@ def TestVal(V,j1,j2,v):
 # Question 5 : construit le tableau T correspondant au vecteur V tel que T[j][l] = T(j,l) récursivement, sachant que certaines cases peuvent être déjà coloriées en blanc ou en noir
 # hypothèse : au début, j=M-1 et l=k
 def ColoriagePossibleRec2(V,s,j,l,T):
-    if T[j][l] != VIDE: #si on a déjà calculé la valeur recherchée
+    if T[j][l] != 3: #si on a déjà calculé la valeur recherchée, on prends 3 pour valeurs de d'initialisation des cases de T parceque c'est un entier que l'on a pas utilisé donc pas de confusion et surtout car (3 == True/False) vaut False
         return T[j][l]
     elif l == 0: #cas de base 1
         T[j][l] = TestVal(V,0,j,NOIR)   #teste s'il y a une case noire avant (i,j), auquel cas T(j,l)=faux puisqu'on est pas censé avoir de bloc noir du tout
@@ -146,13 +146,12 @@ def ColoreLig(G,i,nouveaux): #on veut donc colorier V = G[0][i] avec la séquenc
     M = len(V)
     j = M-1
     l = len(s)
-    T = init_matrice(M,l+1,0)
     for k in range(0,M):#on parcourt les M cases de la i-eme ligne
         if V[k]==VIDE: #si on a pas encore colorié cette case
-            T = init_matrice(M,l+1,0)
+            T = init_matrice(M,l+1,3)
             V[k]=BLANC
             caseb = ColoriagePossibleRec2(V,s,j,l,T) #on test si la case peut etre coloriée en blanc
-            T = init_matrice(M,l+1,0)
+            T = init_matrice(M,l+1,3)
             V[k]=NOIR
             casen = ColoriagePossibleRec2(V,s,j,l,T) #on test si la case peut etre coloriée en noir
             if(caseb and casen): #si la case peut etre coloriee en noir ou blanc on ne peut rien en conclure donc on remet V[k] a VIDE
@@ -185,13 +184,12 @@ def ColoreCol(G,j,nouveaux):
     N = len(V)
     i = N-1
     l = len(s)
-    T = init_matrice(N,l+1,0)
     for k in range(0,N):
         if V[k]==VIDE:
-            T = init_matrice(N,l+1,0)
+            T = init_matrice(N,l+1,3)
             V[k]=BLANC
             caseb = ColoriagePossibleRec2(V,s,i,l,T)
-            T = init_matrice(N,l+1,0)
+            T = init_matrice(N,l+1,3)
             V[k]=NOIR
             casen = ColoriagePossibleRec2(V,s,i,l,T)
             if (casen and caseb):
