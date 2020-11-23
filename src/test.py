@@ -41,36 +41,25 @@ import time
 #print(test2[0])
 #print("\n")
 #affiche_matrice(test2[1][0])
-'''
-N = 9
+
+'''N = 16
 DictionnaireTemps = {}
-for i in range(N):
+for i in range(1,N):
     string = "./instances/"+str(i)+".txt"
     Test = lecture(string)
     start = time.perf_counter()
-    test2 = coloration(Test)
+    test2 = Enumeration(Test)
     end = time.perf_counter()
     DictionnaireTemps[i] = (end-start)
+    print("solution de l'instance "+str(i)+".txt")
     affiche_matrice(test2[1][0])
+    if (i>11):
+        test3 = coloration(Test)
+        affiche_matrice(test3[1][0])
 
-for i in range(N):
+for i in range(1,N):
     print("l'instance "+str(i)+".txt a ete resolue en "+str(DictionnaireTemps[i])+" s")
-
-Test = lecture("./instances/9.txt")
-start = time.perf_counter()
-test2 = coloration(Test)
-end = time.perf_counter()
-
-print("l'instance 9.txt a ete resolue en "+str((end-start))+" s")
-
-Test = lecture("./instances/10.txt")
-start = time.perf_counter()
-test2 = coloration(Test)
-end = time.perf_counter()
-
-print("l'instance 10.txt a ete resolue en "+str((end-start))+" s")
-
-affiche_matrice(test2[1][0])'''
+'''
 
 Test = lecture("./instances/13.txt")
 test2 = Enumeration(Test)

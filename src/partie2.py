@@ -77,11 +77,14 @@ def Enumeration(A):
         return (False,A0)
     elif(ok=="vrai"):
         return (True,A0)
-    (ok1,A1) = enum_rec(A0,0,BLANC)
+
+    k = trouvek(A0,0,0,len(A[0][0]),len(A[0])) #on colorie la premiere case non coloriée
+    
+    (ok1,A1) = enum_rec(A0,k,BLANC)
     if (ok1):
         return (ok1,A1)
     else:
-        (ok2,A2) = enum_rec(A0,0,NOIR)
+        (ok2,A2) = enum_rec(A0,k,NOIR)
         if(ok2):
             return (ok2,A2)
     return (False,A)

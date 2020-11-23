@@ -14,7 +14,7 @@ def affiche_matrice(A):
                 print(u"\u25A1", end = '' )
 
             else:
-                print(A[i][j])
+                print(A[i][j], end = '' )
         print()
     print()
  
