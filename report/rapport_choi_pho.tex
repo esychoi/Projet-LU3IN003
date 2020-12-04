@@ -46,7 +46,8 @@
 	\begin{abstract}
 		Dans le cadre de l'UE d'Algorithmique II LU3IN003, nous devons réaliser un projet de solveur de problèmes de tomographie discrète. \\
 		Nous avons choisi d'utiliser le langage Python. \\
-		Les tests de temps de résolution ont été réalisés sur un processeur Intel\copyright Core\texttrademark i7-8550U 1.80GHz.
+		Les tests de temps de résolution ont été réalisés sur un processeur Intel\copyright Core\texttrademark i7-8550U 1.80GHz. \\
+		Pour tester notre programme, il faut lancer \textit{src/main.py}.
 	\end{abstract}
 	
 	
@@ -148,7 +149,8 @@
 					\item lignes 12-19 : cas 2b
 					\item lignes 20-23 : cas 2c
 				\end{itemize}
-	
+			
+		\newpage
 		\subsection{Généralisation}
 		
 			\paragraph{Q5}
@@ -206,8 +208,10 @@
 				
 				La grille obtenue pour l'instance 9.txt est la suivante :
 				\begin{center}
-				\includegraphics[scale=0.4]{instance9.png}
-			\end{center}
+					\includegraphics[scale=0.242]{instance9.png}
+				\end{center}
+			
+				Comme nous avons choisi de faire un affichage terminal par simplicité, le terminal étant de fond foncé, nous avons affiché les cases noires en blanc et inversement.
 		
 			\paragraph{Q11}
 				L'algorithme implémenté dans cette partie ne sait pas résoudre l'instance 11.txt car pour chaque ligne et pour chaque colonnes, les fonctions \textit{ColoreLig} et \textit{ColoreCol} ne permettent pas de colorier des cases.
@@ -223,7 +227,7 @@
 		\subsection{Implantation et tests}
 		
 			\paragraph{Q13}
-				Il s'agit des fonctions du fichier \textit{src/partie2.py}
+				Il s'agit des fonctions du fichier \textit{src/partie2.py}.
 		
 			\paragraph{Q14}
 				Le tableau suivant donne les temps de résolution de chacune des instances 1 à 16 avec l'algorithme de la partie 2.
