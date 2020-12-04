@@ -45,7 +45,7 @@
 	
 	\begin{abstract}
 		Dans le cadre de l'UE d'Algorithmique II LU3IN003, nous devons réaliser un projet de solveur de problèmes de tomographie discrète. \\
-		Nous avons choisi d'utiliser le langage Python pour ce projet \\
+		Nous avons choisi d'utiliser le langage Python. \\
 		Les tests de temps de résolution ont été réalisés sur un processeur Intel\copyright Core\texttrademark i7-8550U 1.80GHz.
 	\end{abstract}
 	
@@ -58,7 +58,7 @@
 		\subsection{Première étape}
 		
 			\paragraph{Q1}
-				Il suffit de regarder s'il existe $ j \in \{1,...,M-1\} $ tel que $ T(j,k) = \true $. En effet cela signifierait qu'il existe un coloriage possible des $ j+1 $ premières cases avec la séquence complète $ (s_1,...,s_k) $.
+				Il suffit de regarder s'il existe $ j \in \{1,...,M-1\} $ tel que $ T(j,k) = \true $. En effet cela signifierait qu'il existe un coloriage possible des $ j+1 $ premières cases avec la séquence complète $ (s_1,...,s_k) $, qui est bien ce que l'on cherche à faire.
 		
 			\paragraph{Q2}
 				Commençons par remarquer que $ \forall j \in \{0,...,M-1\} $ et $ \forall l \in \{1,...,k\} $, pour que $ T(j,l) $ soit vrai, il faut que les $ j+1 $ premières cases contiennent au moins les $ l $ premiers blocs noirs en entier en plus des $ l-1 $ cases blanches pour séparer chaque bloc noir, c'est-à-dire qu'il faut : \\
@@ -71,7 +71,7 @@
 						D'après la remarque que l'on a faite, pour avoir $ T(j,l) = \true $, il faudrait avoir $ j \geq s_1-1 $. \\
 						Or, on a supposé $ j < s_l-1 = s_1 - 1 $ \\
 						Donc pour $ l=1 $, $ T(j,l) = \false $
-						\item si $ l \geq 2 $ : alors $ l-1 + s_l-1 + \sum\limits_{i=1}^{l-1} s_i > s_l - 1 $ car $ l-1 > 0 $ \\
+						\item si $ l \geq 2 $ : alors $ l-1 + s_l-1 + \sum\limits_{i=1}^{l-1} s_i > s_l - 1 $\\
 						Pour avoir $ T(j,l) = \true $, il faudrait avoir $ j > s_l - 1 $ \\
 						Or, on a supposé $ j < s_l-1 $ \\
 						Donc pour $ l \geq 2 $, $ T(j,l) = \false $
@@ -82,7 +82,7 @@
 						\item si $ l=1 $ : alors de même, $ l-1 + s_l-1 + \sum\limits_{i=1}^{l-1} s_i = s_1 - 1 $ \\
 						D'après la remarque que l'on a faite, pour avoir $ T(j,l) = \true $, il faudrait avoir $ j \geq s_1-1 $. \\
 						Donc, en particulier pour $ j = s_l - 1 $, $ T(j,l) = \true $
-						\item si $ l \geq 2 $ : alors de même, $ l-1 + s_l-1 + \sum\limits_{i=1}^{l-1} s_i > s_l - 1 $ car $ l-1 > 0 $ \\
+						\item si $ l \geq 2 $ : alors de même, $ l-1 + s_l-1 + \sum\limits_{i=1}^{l-1} s_i > s_l - 1 $\\
 						Pour avoir $ T(j,l) = \true $, il faudrait avoir $ j > s_l - 1 $ \\
 						Or, on a supposé $ j = s_l-1 $ \\
 						Donc pour $ l \geq 2 $, $ T(j,l) = \false $
@@ -105,7 +105,7 @@
 				\end{itemize}
 		
 			\paragraph{Q4}
-				Il s'agit de la fonction \textit{ColoriagePossibleRec} dans le fichier \textit{src/partie1}. L'algorithme en pseudo-code est le suivant :
+				Il s'agit de la fonction \textit{ColoriagePossibleRec} dans le fichier \textit{src/partie1}. L'algorithme utilise le principe de la programmation dynamique puisque pour calculer une valeur, on se sert des valeurs que l'on a déjà calculé. Le pseudo-code est le suivant :
 				\begin{algorithm} [H]
 					\caption{ColoriagePossibleRec}
 					\label{color_poss_rec}
@@ -114,6 +114,12 @@
 						\ENSURE Retourne la matrice $ T $ telle que $ T[j][l] = T(j,l) $. On suppose que pour le premier appel, $ j = M-1 $ et $ l = k $
 						\IF{$ T[j][l] \neq $ VIDE}
 						\RETURN $ T[j][l] $
+						\ELSIF{$ l = 0 $}
+						\STATE $ T[j][l] \leftarrow \true $
+						\RETURN $ \true $
+						\ELSIF{$ l = 1 $ et $ j = s_1-1 $}
+						\STATE $ T[j][l] \leftarrow \true $
+						\RETURN $ \true $
 						\ELSIF{$j < s_l-1 $}
 						\STATE $ T[j][l] \leftarrow \false $
 						\RETURN faux
@@ -126,7 +132,7 @@
 						\RETURN faux
 						\ENDIF
 						\ELSE
-						\STATE $ T[j][l] \leftarrow (ColoriagePossibleRec(T,s,j-1,l) \text{ ou } ColoriagePossibleRec(T,s,j-s_l-1,l-1)) $
+						\STATE $ T[j][l] \leftarrow ColoriagePossibleRec(T,s,j-1,l) \text{ ou } ColoriagePossibleRec(T,s,j-s_l-1,l-1) $
 						\RETURN $ T[j][l] $
 						\ENDIF\begin{flushleft}
 							
@@ -135,14 +141,13 @@
 				\end{algorithm}
 				
 				\begin{itemize}
-					\item ligne 1 : initialisation de la matrice
-					\item lignes 2-5 : cas de base du cas 2c
-					\item lignes 8-10 : cas 1
-					\item lignes 11-18 : cas 2a
-					\item lignes 19-22 : cas 2c
+					\item ligne 1 : si  l'on a déjà calculé la valeur recherchée, on la retourne directement
+					\item lignes 3-5 : cas 1
+					\item lignes 6-8 : cas de base du cas 2b
+					\item lignes 9-11 : cas 2a
+					\item lignes 12-19 : cas 2b
+					\item lignes 20-23 : cas 2c
 				\end{itemize}
-				
-				En réalité, l'algorithme ne calcule pas nécessairement toutes les cases du tableau $ T $ : il ne calcule que les valeurs utiles, celles qui répondent à la question 1. En effet, si le résultat voulu est calculé, on le retourne ; sinon, on stocke progressivement les valeurs qui permettent le calculer. C'est le principe de la programmation dynamique.
 	
 		\subsection{Généralisation}
 		
@@ -161,15 +166,17 @@
 					\item cas de base 2c : il y a deux cas possibles.
 					\begin{itemize}
 						\item la case $ (i,j) $ est blanche : il faut regarder si les $ l $ premiers blocs rentrent dans les $ j $ premières cases, c'est-à-dire qu'il faut faire un appel récursif sur la fonction pour calculer $ T(j-1,l) $
-						\item la case $ (i,j) $ est noire : on est sur la dernière case du bloc $ l $ donc $ T(j,l) = \true $ s'il n'y a pas de case blanche parmi les cases que constituent le bloc $ l $ et si la case d'indice $ j-s_l $ n'est pas noire (car si elle l'était, la case $ (i,j-1) $ contiendrait la dernière case du bloc $ l $ et $ (i,j) $ ne pourrait être noire). Si l'on a les deux conditions, alors il faut regarder s'il est possible de faire rentrer les $ l-1 $ premiers blocs dans les $ j-(s_l-) $ premières cases
+						\item la case $ (i,j) $ est noire : on est sur la dernière case du bloc $ l $ donc $ T(j,l) = \true $ s'il n'y a pas de case blanche parmi les cases que constituent le bloc $ l $ et si la case d'indice $ j-s_l $ n'est pas noire (car si elle l'était, la case $ (i,j-1) $ contiendrait la dernière case du bloc $ l $ et $ (i,j) $ ne pourrait être noire). Si l'on a les deux conditions, alors il faut regarder s'il est possible de faire rentrer les $ l-1 $ premiers blocs dans les $ j-s_l-1 $ premières cases
 					\end{itemize}
 			\end{itemize}
 		
 		\paragraph{Q6}
-			La matrice qui contient la valeur des $ T(j,l) $ est de taille $ M \times k $. Or $ k \leq \lfloor \frac{M+1}{2} \rfloor $ : au maximum, sur une ligne de taille $ M $, on peut faire rentrer $ \lfloor \frac{M+1}{2} \rfloor $ blocs noirs (ils sont alors tous de longueur 1). Donc il y a au plus $ M \times \lfloor \frac{M+1}{2} \rfloor $ valeurs à calculer. \\
+			La matrice qui contient les valeurs des $ T(j,l) $ est de taille $ M \times k $. Or $ k \leq \lfloor \frac{M+1}{2} \rfloor $ : au maximum, sur une ligne de taille $ M $, on peut faire rentrer $ \lfloor \frac{M+1}{2} \rfloor $ blocs noirs (ils sont alors tous de longueur 1). Donc il y a au plus $ M \times \lfloor \frac{M+1}{2} \rfloor $ valeurs à calculer. \\
 			Pour calculer une valeur de $ T(j,l) $, on fait appel à la fonction \textit{TestVal} qui est de complexité $ O(M) $ (dans le pire cas, on cherche une occurrence d'une valeur dans la ligne entière). \\
-			Conclusion : l'algorithme est de complexité $ O(M \times M \times \lfloor \frac{M+1}{2} \rfloor) = \boxed{O(M^3)} $
-		
+			Conclusion : l'algorithme est de complexité $ O(M \times M \times \lfloor \frac{M+1}{2} \rfloor) = \boxed{O(M^3)} $ \\
+			
+			En réalité, l'algorithme ne calcule pas nécessairement toutes les cases du tableau $ T $. Il ne calcule que les valeurs utiles : si le résultat voulu a déjà été calculé, on le retourne ; sinon, on stocke progressivement uniquement les valeurs qui permettent de le calculer. C'est le principe de la programmation dynamique.
+			
 		\paragraph{Q7}
 			Il s'agit de la fonction \textit{ColoriagePossibleRec2} dans le fichier \textit{src/partie1.py}.
 	
@@ -180,7 +187,7 @@
 				La fonction \textit{Coloration} comporte deux boucles \textit{for}, l'une sur \textit{lignesAVoir} et l'autre sur \textit{colonnesAVoir} de tailles au plus $ N $ et $ M $ respectivement, qui sont exécutées tant que \textit{lignesAVoir} et \textit{colonnesAVoir} ne sont pas vides, c'est-à-dire tant que l'on peut colorier des nouvelles cases. La boucle \textit{while} fait donc au plus $ MN $ itérations, et les boucles \textit{for} au plus $ N $ et $ M $ itérations. \\
 				Pour la boucle sur \textit{lignesAVoir}, on fait appel à la fonction \textit{ColoreLig} qui est de complexité $ O(M^4) $. \\
 				Pour la boucle sur \textit{colonnesAVoir}, on fait appel à la fonction \textit{ColoreCol} qui est de complexité $ O(N^4) $. \\
-				Conclusion : la fonction \textit{Coloration} est de complexité $ O(MN(N \times M^4 + M \times N^4)) = \boxed{O(N^2 \times M^5 + M^2 \times N^5)} $. On a donc bien une complexité polynomiale en $ N $ et $ M $
+				Conclusion : la fonction \textit{Coloration} est de complexité $ O(MN(N \times M^4 + M \times N^4)) = \boxed{O(N^2 \times M^5 + M^2 \times N^5)} $. On a donc bien une complexité polynomiale en $ N $ et $ M $.
 			
 			\paragraph{Q9}
 				Il s'agit des fonctions \textit{lecture, ColoreLig, ColoreCol, Coloration} dans le fichier \textit{src/partie1.py}
@@ -193,7 +200,7 @@
 					\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c| }
 						\hline
 						instance & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\ \hline
-						temps de résolution (s) & 0.00080 & 0.125 & 0.081 & 0.230 & 0.180 & 0.409 & 0.259 & 0.398 & 4.454 & 4.465 \\ \hline
+						temps de résolution (s) & 0.00108 & 0.125 & 0.081 & 0.230 & 0.180 & 0.409 & 0.259 & 0.398 & 4.454 & 4.465 \\ \hline
 					\end{tabular}
 				\end{center}
 				
@@ -210,8 +217,8 @@
 		
 		\paragraph{Q12}
 		
-			La fonction \textit{EnumRec} est de complexité $ \boxed{O(2^{MN}) (N^2 \times M^5 + M^2 \times N^5) } $. En effet, pour chaque case, on fait deux appels récursifs, une en coloriant la case en blanc, et l'autre en noir, et on fait appel à la fonction \textit{ColorierEtPropager} qui est de même complexité que \textit{Coloration} dans le pire cas. Il y a $ MN $ cases au total, d'où la complexité que nous venons d'énoncer. \\
-			Par conséquent, l'algorithme d'énumération ne peut qu'avoir une complexité exponentielle.
+			La fonction \textit{EnumRec} est de complexité $ \boxed{O(2^{MN}(N^2 \times M^5 + M^2 \times N^5)) } $. En effet, pour chaque case, on fait deux appels récursifs, une en coloriant la case en blanc, et l'autre en noir, et on fait appel à la fonction \textit{ColorierEtPropager} qui est de même complexité que \textit{Coloration} dans le pire cas. Il y a $ MN $ cases au total, d'où la complexité que nous venons d'énoncer. \\
+			Par conséquent, l'algorithme d'énumération a une complexité exponentielle.
 		
 		\subsection{Implantation et tests}
 		
@@ -224,7 +231,7 @@
 					\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c| }
 						\hline
 						instance & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\ \hline
-						temps de résolution (s) & 0.00446 & 0.144 & 0.073 & 0.196 & 0.168 & 0.384 & 0.224 & 0.342 & 3.703 & 3.820 \\ \hline
+						temps de résolution (s) & 0.00102 & 0.144 & 0.073 & 0.196 & 0.168 & 0.384 & 0.224 & 0.342 & 3.703 & 3.820 \\ \hline
 					\end{tabular}
 				\end{center}
 			
@@ -236,7 +243,7 @@
 					\end{tabular}
 				\end{center}
 			
-				Le tableau suivant donne les temps de résolution de chacune des instances 12 à 16 avec l'algorithme de la partie 1.
+				Le tableau suivant donne les temps de résolution de chacune des instances 11 à 16 avec l'algorithme de la partie 1.
 				\begin{center}
 					\begin{tabular}{|c|c|c|c|c|c|c| }
 						\hline
@@ -244,6 +251,8 @@
 						temps de résolution (s) & 0.00023 & 0.389 & 0.507 & 0.318 & 0.225 & 0.844 \\ \hline
 					\end{tabular}
 				\end{center}
+				
+				On remarque que l'algorithme de coloration et celui d'énumération résolvent complètement les instances 1 à 10 avec un temps de même ordre de grandeur. Pour les instances 11 à 15, rapidement l'algorithme de coloration ne parvient pas à résoudre la grille de jeu tandis que l'algorithme d'énumération, avec un temps de résolution de même ordre de grandeur, y parvient. Pour l'instance 16, ce dernier prend beaucoup de temps, et c'est là que l'on voit la complexité exponentielle de l'algorithme. \\
 				
 				La grille obtenue pour l'instance 15.txt avec l'algorithme de la partie 1 est la suivante :
 				\begin{center}
