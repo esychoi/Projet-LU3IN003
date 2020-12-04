@@ -5,23 +5,12 @@ import copy
 from constantes import *
 from API_liste_matrice import *
 
-# renvoie T(j,l) (fonction inutile)
-def ColorPoss(s,j,l):
-    if (j < 0) or (l < 0):
-        return False #élément neutre du ou
-    elif (l == 0):
-        return True
-    elif (j == (s[1]-1)) and (l == 1):
-        return True
-    else:
-        return ColorPoss(s,j-1,l) or ColorPoss(s,j-s[l]-1,l-1)
-
 # Question 4 : construit le tableau T tel que T[j][l] = T(j,l) récursivement, en supposant que la grille est vide
 # hypothèse : au début, j=M-1 et l=k
 def ColoriagePossibleRec(T,s,j,l):
     if(T[j][l] != VIDE): #si on connaît déjà la valeur de T[j][l]
         return T[j][l]
-    elif (j < 0) or (l < 0): #je le met car en python liste[-i] donne le i-ème élément de liste en partant de la fin, et nous on veut pas ça
+    elif (j < 0) or (l < 0): #je le met car en python liste[-i] donne le i-ème élément de liste en partant de la fin, et on ne veut pas ça
         return False
     elif (l == 0): #cas de base 1
         T[j][l] = True
@@ -62,7 +51,7 @@ def ColoriagePossibleRec2(V,s,j,l,T):
     elif (l == 1) and (j == s[0]-1): #cas de base de 2b
         T[j][l] = TestVal(V,0,j,BLANC)  #test s'il y a une case blanche avant (i,j), auquel cas T(j,l)=faux puisque les j+1 premières cases contiennent le bloc 1
         return T[j][l] 
-    elif (j < 0) or (l < 0):    #je le met car en python liste[-i] donne le i-ème élément de liste en partant de la fin, et nous on veut pas ça
+    elif (j < 0) or (l < 0):    #je le met car en python liste[-i] donne le i-ème élément de liste en partant de la fin, et on ne veut pas ça
         return False
     elif j <= s[l-1]-1: #cas de base 2a et 2b pour l!=1
         T[j][l] = False
@@ -86,7 +75,7 @@ def ColoriagePossibleRec2(V,s,j,l,T):
             b2 = False  #car il ne doit pas y avoir de case blanche entre j-(s[l-1]-1) et j (puisqu'on est dans le bloc noir l)
         elif V[j-s[l-1]] == NOIR:   #si le test est vérifié, cela signifie que le bloc l se termine à la case (i,j-1) donc (i,j) ne pourrait être noire
             b2 = False
-        else:   #il faut tester si les l-1 premiers blocs rentrent dans les j-(s[l-1]1) premières cases
+        else:   #il faut tester si les l-1 premiers blocs rentrent dans les j-s[l-1]-1 premières cases
             b2 = ColoriagePossibleRec2(V,s,j-s[l-1]-1,l-1,T)
 
     T[j][l] = (b1 or b2)
